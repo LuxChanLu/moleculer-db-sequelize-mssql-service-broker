@@ -1,6 +1,6 @@
 {
   "name": "moleculer-db-sequelize-mssql-service-broker",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -17,6 +17,9 @@
   },
   "homepage": "https://github.com/LuxChanLu/moleculer-db-sequelize-mssql-service-broker#readme",
   "dependencies": {
-    "sqlssb": "0.0.2"
+    "secure-json-parse": "^2.1.0"
+  },
+  "peerDependencies": {
+    "sequelize": "^6.3.5"
   }
 }
