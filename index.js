@@ -53,7 +53,7 @@ module.exports = {
             })
           }
         }
-        return this.$mssql.services[name].start()
+        this.$mssql.services[name].start()
       }))
     }
   },
