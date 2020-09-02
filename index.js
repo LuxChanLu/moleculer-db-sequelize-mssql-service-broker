@@ -28,13 +28,12 @@ module.exports = {
                 type: QueryTypes.SELECT
               })
               await Promise.all(messages.map(message => {
-                const event = eventName && typeof eventName == 'function' ? eventName(message, name) : (eventName || `${this.service.name}.${name}`)
+                const event = eventName && typeof eventName == 'function' ? eventName(message, this.service, name) : (eventName || `${this.service.name}.${name}`)
                 // TODO: XML ?
                 if (json) {
                   message.body = JSON.parse(message.message_body.toString('ucs2'))
                   delete message.message_body
                 }
-                console.log(event, message)
                 this.broker.emit(event, message)
               }))
             } while (this.active)
