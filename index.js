@@ -23,19 +23,24 @@ module.exports = {
           active: true,
           async start() {
             do {
-              const messages = await this.adapter.db.query(SQL.receive.replace(':queue', queue), { // Why 'replace' : https://github.com/sequelize/sequelize/issues/4494
-                replacements: { count, timeout },
-                type: QueryTypes.SELECT
-              })
-              await Promise.all(messages.map(message => {
-                const event = eventName && typeof eventName == 'function' ? eventName(message, this.service, name) : (eventName || `${this.service.name}.${name}`)
-                // TODO: XML ?
-                if (json) {
-                  message.body = JSON.parse(message.message_body.toString('ucs2'))
-                  delete message.message_body
-                }
-                this.broker.emit(event, message)
-              }))
+              try {
+                const messages = await this.adapter.db.query(SQL.receive.replace(':queue', queue), { // Why 'replace' : https://github.com/sequelize/sequelize/issues/4494
+                  replacements: { count, timeout },
+                  type: QueryTypes.SELECT
+                })
+                await Promise.all(messages.map(message => {
+                  const event = eventName && typeof eventName == 'function' ? eventName(message, this.service, name) : (eventName || `${this.service.name}.${name}`)
+                  // TODO: XML ?
+                  if (json) {
+                    message.body = JSON.parse(message.message_body.toString('ucs2'))
+                    delete message.message_body
+                  }
+                  this.broker.emit(event, message)
+                }))
+              } catch (error) {
+                this.broker.loger.error(error)
+                await new Promise(r => setTimeout(r, timeout))
+              }
             } while (this.active)
           },
           stop() {
