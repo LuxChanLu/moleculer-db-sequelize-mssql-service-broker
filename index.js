@@ -38,7 +38,7 @@ module.exports = {
                   this.broker.emit(event, message)
                 }))
               } catch (error) {
-                this.broker.loger.error(error)
+                this.broker.logger.error(error)
                 await new Promise(r => setTimeout(r, timeout))
               }
             } while (this.active)
